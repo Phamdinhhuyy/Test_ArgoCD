@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: application
+metadata:
+  name: argocd_application
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Phamdinhhuyy/Test_ArgoCD.git
+    targetRevision: HEAD
+    path: templates
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: image
+          value: "nginx:latest"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
